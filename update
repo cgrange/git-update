@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# if no branch specified default to develop
+branch=${1:-develop}
+
+# checkout and pull $branch for this repo and its submodules
+git checkout -q $branch
+git pull -q
+git submodule foreach -q "
+	git checkout -q $branch
+	git pull -q
+"
+
+# print status for this repo and its submodules
+git status
+echo ""
+echo "submodule statuses"
+echo "=================="
+git submodule foreach "
+	git status
+	echo "-------------------------------------"
+	echo ""
+"
